@@ -1,6 +1,7 @@
 package net.rocketstrong.waterframescctcompat;
 
 import com.mojang.logging.LogUtils;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -12,11 +13,16 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.rocketstrong.waterframescctcompat.blocks.DisplayInteract.DisplayInteractAttach;
+import net.rocketstrong.waterframescctcompat.blocks.peripherals.DisplayBlockHandler;
 import org.slf4j.Logger;
 
 import dan200.computercraft.api.ForgeComputerCraftAPI;
 
 import net.rocketstrong.waterframescctcompat.blocks.peripherals.PeripheralProvider;
+
+import java.util.HashMap;
+import java.util.Map;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(Watermediacccompat.MODID)
@@ -35,21 +41,14 @@ public class Watermediacccompat {
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-
-        // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        MinecraftForge.EVENT_BUS.register(DisplayBlockHandler.class);
+        MinecraftForge.EVENT_BUS.register(DisplayInteractAttach.class);
 
         ForgeComputerCraftAPI.registerPeripheralProvider(new PeripheralProvider());
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         // Some common setup code
-    }
-
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
-        // Do something when the server starts
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
