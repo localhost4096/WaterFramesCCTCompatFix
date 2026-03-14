@@ -10,6 +10,8 @@ import me.srrapero720.waterframes.common.network.packets.TimePacket;
 import me.srrapero720.waterframes.common.network.packets.VolumePacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.rocketstrong.waterframescctcompat.Watermediacccompat;
+import net.rocketstrong.waterframescctcompat.blocks.DisplayInteract.InteractableProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,6 +26,7 @@ public class DisplayTilePeripheral implements IPeripheral {
     private final BlockPos blockPos;
     private final Level level;
     private final DisplayTile Tile;
+    private boolean interactable = true;
 
     public DisplayTilePeripheral(@NotNull BlockPos blockPos, Level level) {
         this.blockPos = blockPos;
@@ -34,6 +37,18 @@ public class DisplayTilePeripheral implements IPeripheral {
     @Override
     public String getType() {
         return "MediaDisplay";
+    }
+
+    @LuaFunction
+    public final void setInteractable(boolean state){
+        interactable = state;
+        Tile.getCapability(InteractableProvider.CAPABILITY)
+                .ifPresent(cap -> cap.setInteractable(state));
+    }
+
+    @LuaFunction
+    public final boolean isInteractable() {
+        return interactable;
     }
 
     @Override
